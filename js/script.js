@@ -70,3 +70,5 @@ function chessChart(ancho, alto){
   //Devuelve toda la cadena completa
   console.log(row);
 }
+
+// Validación de correo electrónico
