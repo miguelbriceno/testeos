@@ -71,4 +71,52 @@ function chessChart(ancho, alto){
   console.log(row);
 }
 
+
+//Par o Impar recurisvo
+/* Usa recursividad para ir restando de a dos en dos a un número n, hasta que
+llega a 0 o 1, y eso lo define como par o impar. Devuelve "true" si es par*/
+function esPar(n) {
+  if (typeof n == "number"){
+    //En caso de que se ingrese un número negativo
+    n = Math.abs(n);
+    if (n == 0) {
+      return true;
+    } else if (n == 1) {
+      return false;
+    } else {
+      n = n - 2;
+      //Aqui implementa recursividad al llamarse a si misma.
+      return esPar(n);
+    }
+  } else {
+    console.log(n + " no es un numero, pruebe ingresando un número.");
+  }
+}
+
+
+
+// Contar carácteres
+/*Recibe dos cadenas y devuelve un arreglo con dos argunmentos:
+1) El número de veces que el primer caracter de la segunda cadena está en la primera cadena.
+2) Un arreglo con las pociciones en que se encuentra dicho caracter en la segunda cadena.
+*/
+function countChar(cadena, c) {
+  if (c.length > 1) {
+    console.log("Ten en cuenta que solo se contarán el número de veces que se halle el primer caractér de \'" + c + "\' es decir \'" + c[0] + "\'.");
+  }
+  let sum = 0;
+  let posArray = [];
+  let dataBack = [];
+  for(let i=0; i<cadena.length; i++) {
+    if (c[0] == cadena[i]) {
+      sum++;
+      posArray.push(i);
+    }
+  }
+  dataBack.push(sum);
+  dataBack.push(posArray);
+  return dataBack;
+}
+
+
 // Validación de correo electrónico
