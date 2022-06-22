@@ -119,4 +119,42 @@ function countChar(cadena, c) {
 }
 
 
+// Generación de rangos
+/*Recibe un numero de partida, un final y un intervalo para generar un rango*/
+function newRange(inicio, final, intervalo) {
+  let rangeArray = [];
+  if (inicio == undefined || final == undefined) {   // Validar si hay datos
+    console.log("Error0: Ingresa un inicio, un final y un intervalo (opcional, por defecto se usará 1 o -1).");
+  } else if (typeof inicio != "number" || typeof final != "number") { // Validar si son números
+    console.log("Error1: Los datos ingresados deben ser números.");
+  } else if (inicio == final) { // Validar si inicio y final son diferentes
+    console.log("Error2: No se puede generar un rango entre números iguales.");
+  } else if (typeof intervalo != "number" && intervalo != undefined) { // Validar si Hay un intervalo definido y valido o defiirlo
+    console.log("Error3: El intervalo definido no es correcto, Debe ser un número.");
+  } else if (intervalo == 0 || intervalo == undefined) {
+    console.log("Warning1: El intervalo es cero o no fue definido, se usará el valor por defecto");
+    if (inicio < final) {intervalo = 1;} else if (inicio > final) {intervalo = -1;}
+  } else if (inicio < final && intervalo < 0) {
+    console.log("Error4: Los datos son incompatibles. No se puede generar un rango.");
+  } else if (inicio > final && intervalo > 0) {
+    console.log("Error5: Los datos son incompatibles. No se puede generar un rango.");
+  } else {
+    // console.log("Validaciones completadas");
+  }
+  // Pasadas las validaciones, se generan los rangos
+  if (intervalo > 0){ // Generar rango positivo
+    while (inicio <= final) {
+      rangeArray.push(inicio);
+      inicio += intervalo;
+    }
+  } else if (intervalo < 0){ // Generar rango negativo
+    while (inicio >= final) {
+      rangeArray.push(inicio);
+      inicio += intervalo;
+    }
+  }
+  return rangeArray;
+}
+
+
 // Validación de correo electrónico
