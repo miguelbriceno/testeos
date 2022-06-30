@@ -157,4 +157,26 @@ function newRange(inicio, final, intervalo) {
 }
 
 
-// Validación de correo electrónico
+// Reverit un Array
+function revertArray(array) {
+  let newArray = [];
+  let arrayLen = array.length;
+  array.forEach((item) => {
+    newArray.push(array[arrayLen-1]);
+    arrayLen--;
+  });
+  return newArray;
+}
+
+// Converir primera letra de cada palabra a mayuscula.
+function toUpperFirst(cadena) {
+  let newCadena = "";
+  // 1) Validar que el dato sea una cadena
+  if (typeof cadena != 'string'){
+    return console.log("Erro0: Por favor ingresa una cadena válida.");
+  }
+  // 2) Buscar el primer caracter en la cadena que se pueda pasar a mayuscula.
+  // 3) Ignorar los siguientes caracteres hasta que haya un espacio.
+  // 4) Repetir pasos 2 y 3 hasta llegar al fin de la cadena.
+  return newCadena;
+}
