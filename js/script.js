@@ -172,25 +172,81 @@ function revertArray(array) {
 function toUpperFirst(cadena) {
   let newCadena = "";
   let chainArray = [];
-  let spaceAndWord = /\s\w+/gm; // Coincide si es una susecion de caracteres alfanumericos precedidos por un espacio.
+  let isBlankSpace = /\s/gm; // Coincide si es una susecion de caracteres alfanumericos precedidos por un espacio.
   let isASpaceOrSpecial = /\s|\W/; // Coincide si es un espacio o un caracter especial.
   let potition = 0;
-  let flag = false;
+  let enterPos = 0;
+  let firstValidCharFlag = false;
 
-  // 1) Validar que el dato sea una cadena
+  // 0) Validar que el dato sea una cadena.
   if (typeof cadena != 'string'){
     return console.log("Erro0: Por favor ingresa una cadena válida.");
   }
 
-  // 2) Buscar el primer caracter en la cadena que se pueda pasar a mayuscula.
-  while (flag == false){
-    while (isASpaceOrSpecial.test(cadena[potition]) == true) {
+  // 1) Pasar toda la cadena a minusculas.
+  cadena = cadena.toLowerCase();
+  cadena = Array.from(cadena);
+
+  // 2) Recorrer la cadena
+  cadena.forEach((char, i)=>{
+    // Si el caracter no es alfanumerico, guardelo y aumente posicion
+    if(isASpaceOrSpecial.test(char) === true){
+      chainArray.push(char);
       potition++;
+    }else if (firstValidCharFlag == false) { // Si el caracter es alfanumerico y es el primero...
+      firstValidCharFlag = true; // ...suba la bandera de primer caracter hallado
+      char = char.toUpperCase(); // ...conviertalo en mayuscula
+      chainArray.push(char); // ... Guardelo en el array
+      enterPos = potition; // Guarde la posicion actual
+      while (isBlankSpace.test(cadena[enterPos] === false || enterPos < cadena.length)) { // Busca el siguiente espacio en blanco, se detiene en el, o en el final de la cadena.
+        enterPos++;
+      }
+      if (isBlankSpace.test(cadena[enterPos] === false && enterPos == cadena.length-1)) { // Si no hay más espacios en blanco...
+        newCadena.push(cadena.slice(potition,enterpos)); // ...recorte el resto de la cadena y guardela
+      }
+      if(potition == cadena.length-1){ // Verifique si es el úlyimo caracter a evaluar
+        // Concatene arreglo
+        newCadena = chainArray.join("");
+        return newCadena;
+      } else {
+        potition++;
+      }
+    } else { // Si es alfanumerico, pero no es el primero
+      if(isBlankSpace.test(cadena[potition-1]) === true){ // Verificar es precedido por un espacio en blanco
+        char = char.toUpperCase(); // ...conviertalo en mayuscula
+        chainArray.push(char); // ... Guardelo en el array
+        enterPos = potition; // Guarde la posicion actual
+        while (isBlankSpace.test(cadena[enterPos] === false || enterPos < cadena.length)) { // Busca el siguiente espacio en blanco, se detiene en el, o en el final de la cadena.
+          enterPos++;
+        }
+        if (isBlankSpace.test(cadena[enterPos] === false && enterPos == cadena.length-1)) { // Si no hay más espacios en blanco...
+          newCadena.push(cadena.slice(potition,enterpos)); // ...recorte el resto de la cadena y guardela
+        }
+        if(potition == cadena.length-1){ // Verifique si es el úlyimo caracter a evaluar
+          // Concatene arreglo
+          newCadena = chainArray.join("");
+          return newCadena;
+        } else {
+          potition++;
+        }
+      } else { // Si no es precedido por un espacio en blanco
+        enterPos = potition; // Guarde la posicion actual
+        while (isBlankSpace.test(cadena[enterPos] === false || enterPos < cadena.length)) { // Busca el siguiente espacio en blanco, se detiene en el, o en el final de la cadena.
+          enterPos++;
+        }
+        if (isBlankSpace.test(cadena[enterPos] === false && enterPos == cadena.length-1)) { // Si no hay más espacios en blanco...
+          newCadena.push(cadena.slice(potition,enterpos)); // ...recorte el resto de la cadena y guardela
+        }
+        if(potition == cadena.length-1){ // Verifique si es el úlyimo caracter a evaluar
+          // Concatene arreglo
+          newCadena = chainArray.join("");
+          return newCadena;
+        } else {
+          potition++;
+        }
+      }
     }
-    flag == true;
-  }
-  chainArray.push(spaceAndWord.exec(cadena));
-  // 3) Ignorar los siguientes caracteres hasta que haya un espacio.
-  // 4) Repetir pasos 2 y 3 hasta llegar al fin de la cadena.
+  });
+
   return newCadena;
 }
