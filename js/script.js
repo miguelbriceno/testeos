@@ -201,11 +201,12 @@ function toUpperFirst(cadena) {
   return newCadena;
 }
 
+
 // Decodificador de datos
 // Recibir un dato y codificarlo pra que sea irreconocible sin la llave de decodificacion.
 function codeThat(data, key){
   // 0) Variables
-  let dataType = typeof data, keyType = typeof key, verificationCodes = [];
+  let dataType = typeof data, keyType = typeof key, verificationCodes = [], encryptedData = {};
   verificationCodes.push(dataType, keyType);
 
   // 1) Verificar que el datos sea válido
@@ -231,9 +232,9 @@ function codeThat(data, key){
   });
   // Suma de los primeros 50 caracteres de la data
   let dataSum = 0;
-  for(let y=0; y<51; y++){
+  for(let y=0; y<(data.length / 2); y++){
     dataSum += data[y].charCodeAt();
-  });
+  }
   verificationCodes.push(dataSum, keyLen, keySum);
 
   // 4) Nivel 1 - Cambio por indices
@@ -244,4 +245,23 @@ function codeThat(data, key){
       }
     });
   });
+
+  // 5) Nivel 2- Revertir el orden y pasar a codigo U y modificarlo.
+  data = data.reverse();
+  data.forEach((char, o)=>{
+    data[o] = (data[o].charCodeAt() + keySum);
+  });
+
+  // 6) Devolver a unicode
+  data.forEach((code, p)=>{
+    data[p] = data[p].charAt();
+  });
+  data = data.join("");
+
+  // Devolver resltado
+  encryptedData = {
+    "data":data,
+    "verifiers":verificationCodes
+  }
+  return encryptedData;
 }
