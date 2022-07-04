@@ -200,3 +200,48 @@ function toUpperFirst(cadena) {
   newCadena = newCadena.join("");
   return newCadena;
 }
+
+// Decodificador de datos
+// Recibir un dato y codificarlo pra que sea irreconocible sin la llave de decodificacion.
+function codeThat(data, key){
+  // 0) Variables
+  let dataType = typeof data, keyType = typeof key, verificationCodes = [];
+  verificationCodes.push(dataType, keyType);
+
+  // 1) Verificar que el datos sea válido
+  if(typeof data == "string" || typeof data == "number"){
+    data = data.toString();
+    data = Array.from(data);
+    if(typeof key == "string" || typeof data == "number"){
+      key = key.toString();
+      key = Array.from(key);
+    }else{
+      return console.log("Error1: La clave de cifrado debe ser una cadena o numero válido.");
+    }
+  }else{
+    return console.log("Error0: Los datos a codificar deben debe ser una cadena o numero válido.");
+  }
+
+  // 3) Generación de verificadores
+  let keyLen = key.length; // Longitud de la clave
+  // Suma de los vaores de la clave
+  let keySum = 0;
+  key.forEach((char)=>{
+    keySum += char.charCodeAt();
+  });
+  // Suma de los primeros 50 caracteres de la data
+  let dataSum = 0;
+  for(let y=0; y<51; y++){
+    dataSum += data[y].charCodeAt();
+  });
+  verificationCodes.push(dataSum, keyLen, keySum);
+
+  // 4) Nivel 1 - Cambio por indices
+  key.foreach((keyChar, i)=>{
+    data.forEach((dataChar, j)=>{
+      if(keyChar == dataChar){
+        data[j] = i;
+      }
+    });
+  });
+}
