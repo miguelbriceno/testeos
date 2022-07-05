@@ -206,14 +206,14 @@ function toUpperFirst(cadena) {
 // Recibir un dato y codificarlo pra que sea irreconocible sin la llave de decodificacion.
 function codeThat(data, key){
   // 0) Variables
-  let dataType = typeof data, keyType = typeof key, verificationCodes = [], encryptedData = {};
+  let dataType = typeof data, keyType = typeof key, keyDigit = 0, verificationCodes = [], encryptedData = {};
   verificationCodes.push(dataType, keyType);
 
   // 1) Verificar que el datos sea válido
   if(typeof data == "string" || typeof data == "number"){
     data = data.toString();
     data = Array.from(data);
-    if(typeof key == "string" || typeof data == "number"){
+    if(typeof key == "string" || typeof key == "number"){
       key = key.toString();
       key = Array.from(key);
     }else{
@@ -230,6 +230,9 @@ function codeThat(data, key){
   key.forEach((char)=>{
     keySum += char.charCodeAt();
   });
+  keyDigit = Array.from(keySum.toString()); // Obtiene el digito para la modificacion en el nivel 2.
+  keyDigit = Number(keyDigit[0]);
+
   // Suma de los primeros 50 caracteres de la data
   let dataSum = 0;
   for(let y=0; y<(data.length / 2); y++){
@@ -238,10 +241,10 @@ function codeThat(data, key){
   verificationCodes.push(dataSum, keyLen, keySum);
 
   // 4) Nivel 1 - Cambio por indices
-  key.foreach((keyChar, i)=>{
+  key.forEach((keyChar, i)=>{
     data.forEach((dataChar, j)=>{
       if(keyChar == dataChar){
-        data[j] = i;
+        data[j] = i.toString();
       }
     });
   });
@@ -249,12 +252,13 @@ function codeThat(data, key){
   // 5) Nivel 2- Revertir el orden y pasar a codigo U y modificarlo.
   data = data.reverse();
   data.forEach((char, o)=>{
-    data[o] = (data[o].charCodeAt() + keySum);
+    data[o] = (data[o].charCodeAt() + keyDigit);
   });
 
   // 6) Devolver a unicode
   data.forEach((code, p)=>{
-    data[p] = data[p].charAt();
+    data[p] = String.fromCharCode(code);
+    console.log("Resultado: " + data[p]);
   });
   data = data.join("");
 
