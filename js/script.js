@@ -202,7 +202,7 @@ function toUpperFirst(cadena) {
 }
 
 
-// Decodificador de datos
+// Codificador de datos
 // Recibir un dato y codificarlo pra que sea irreconocible sin la llave de decodificacion.
 function codeThat(data, key){
   // 0) Variables
@@ -223,9 +223,9 @@ function codeThat(data, key){
     return console.log("Error0: Los datos a codificar deben debe ser una cadena o numero válido.");
   }
 
-  // 3) Generación de verificadores
+  // 2) Generación de verificadores
   let keyLen = key.length; // Longitud de la clave
-  // Suma de los vaores de la clave
+  // Suma de los valores de la clave
   let keySum = 0;
   key.forEach((char)=>{
     keySum += char.charCodeAt();
@@ -240,7 +240,7 @@ function codeThat(data, key){
   }
   verificationCodes.push(dataSum, keyLen, keySum);
 
-  // 4) Nivel 1 - Cambio por indices
+  // 3) Nivel 1 - Cambio por indices
   key.forEach((keyChar, i)=>{
     data.forEach((dataChar, j)=>{
       if(keyChar == dataChar){
@@ -249,23 +249,50 @@ function codeThat(data, key){
     });
   });
 
-  // 5) Nivel 2- Revertir el orden y pasar a codigo U y modificarlo.
+  // 4) Nivel 2- Revertir el orden y pasar a codigo U y modificarlo.
   data = data.reverse();
   data.forEach((char, o)=>{
     data[o] = (data[o].charCodeAt() + keyDigit);
   });
 
-  // 6) Devolver a unicode
+  // 5) Devolver a unicode
   data.forEach((code, p)=>{
     data[p] = String.fromCharCode(code);
     console.log("Resultado: " + data[p]);
   });
   data = data.join("");
 
-  // Devolver resltado
+  // 6) Devolver resltado
   encryptedData = {
     "data":data,
     "verifiers":verificationCodes
   }
   return encryptedData;
 }
+
+
+// Decodificador de datos
+// Recibe un objeto JSON creado por la funcion codeThat y un string con la clave para decodifiacrlo y devuelve la cadena original.
+function decodeThat(dataObject, key) {
+  // 0) Verificacion y Extracción de datos
+  if(typeof dataObject == "Object" && (typeof key == "string" || typeof key == "number")){
+    if(typeof dataObject.data == "string" && dataObject.verifiers.length == 5){
+      // Extragección de datos del objeto
+      let dataType = dataObject.verifiers[0], keyType = dataObject.verifiers[1], dataSum = dataObject.verifiers[2], keyLen = dataObject.verifiers[3], keySum = dataObject.verifiers[4];
+      let keyDigit = Array.from(keySum.toString());
+      keyDigit = Number(keyDigit[0]);
+      let decoData = dataObject.data;
+      key = key.toString();
+    }else{
+      return console.log("Error1: Los datos recibidos no son del tipo correcto o estaban incompletos.");
+    }
+  }else{
+    return console.log("Error0: Los datos recibidos no son del tipo correcto.");
+  }
+
+
+
+
+
+
+}// Fin funcion
