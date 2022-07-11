@@ -207,7 +207,6 @@ function toUpperFirst(cadena) {
 function codeThat(data, key){
   // 0) Variables
   let dataType = typeof data, keyType = typeof key, keyDigit = 0, verificationCodes = [], encryptedData = {};
-  verificationCodes.push(dataType, keyType);
 
   // 1) Verificar que el datos sea válido
   if(typeof data == "string" || typeof data == "number"){
@@ -224,7 +223,8 @@ function codeThat(data, key){
   }
 
   // 2) Generación de verificadores
-  let keyLen = key.length; // Longitud de la clave
+  let keyLen = key.length; // Longitud de la clave y la data
+  let dataLen = data.length;
   // Suma de los valores de la clave
   let keySum = 0;
   key.forEach((char)=>{
@@ -238,7 +238,7 @@ function codeThat(data, key){
   for(let y=0; y<(data.length / 2); y++){
     dataSum += data[y].charCodeAt();
   }
-  verificationCodes.push(dataSum, keyLen, keySum);
+  verificationCodes.push(dataType, keyType, dataSum, keySum, dataLen, keyLen);
 
   // 3) Nivel 1 - Cambio por indices
   key.forEach((keyChar, i)=>{
@@ -258,7 +258,6 @@ function codeThat(data, key){
   // 5) Devolver a unicode
   data.forEach((code, p)=>{
     data[p] = String.fromCharCode(code);
-    console.log("Resultado: " + data[p]);
   });
   data = data.join("");
 
@@ -276,13 +275,13 @@ function codeThat(data, key){
 function decodeThat(dataObject, key) {
   // 0) Verificacion y Extracción de datos
   if(typeof dataObject == "Object" && (typeof key == "string" || typeof key == "number")){
-    if(typeof dataObject.data == "string" && dataObject.verifiers.length == 5){
+    if(typeof (dataObject.data == "string" || dataObject.data == "number") && dataObject.verifiers.length == 6){
       // Extragección de datos del objeto
-      let dataType = dataObject.verifiers[0], keyType = dataObject.verifiers[1], dataSum = dataObject.verifiers[2], keyLen = dataObject.verifiers[3], keySum = dataObject.verifiers[4];
+      let dataType = dataObject.verifiers[0], keyType = dataObject.verifiers[1], dataSum = dataObject.verifiers[2], keySum = dataObject.verifiers[3], dataLen = dataObject.verifiers[4], keyLen = dataObject.verifiers[5];
       let keyDigit = Array.from(keySum.toString());
       keyDigit = Number(keyDigit[0]);
       let decoData = dataObject.data;
-      key = key.toString();
+      key = Array.from(key.toString());
     }else{
       return console.log("Error1: Los datos recibidos no son del tipo correcto o estaban incompletos.");
     }
