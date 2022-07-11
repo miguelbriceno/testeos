@@ -233,7 +233,7 @@ function codeThat(data, key){
   keyDigit = Array.from(keySum.toString()); // Obtiene el digito para la modificacion en el nivel 2.
   keyDigit = Number(keyDigit[0]);
 
-  // Suma de los primeros 50 caracteres de la data
+  // Suma de los primeros n caracteres de la data
   let dataSum = 0;
   for(let y=0; y<(data.length / 2); y++){
     dataSum += data[y].charCodeAt();
@@ -290,7 +290,7 @@ function decodeThat(dataObject, key) {
     return console.log("Error0: Los datos recibidos no son del tipo correcto.");
   }
 
-  // 1) Verificar si la clave ingresada es la correcta
+  // 1) Verificar si la clave ingresada es la correcta y el largo de la data
   let actualKeySum = 0;
   key.forEach((char)=>{
     actualKeySum += char.charCodeAt();
@@ -303,8 +303,38 @@ function decodeThat(dataObject, key) {
     return console.log("Error2: La clave ingresada no coincide.");
   }
 
-  // 2) 
+  // 2) Pasar datos a codigos unicode, modificarlos y ordenarlos
+  decoData = decoData.reverse();
+  decoData.forEach((char, o)=>{
+    decoData[o] = (decoData[o].charCodeAt() - keyDigit);
+  });
 
+  // 3) Verificar la suma de los primeros n caracteres de la data
+  let actualDataSum = 0;
+  for(let y=0; y<(decoData.length / 2); y++){
+    actualDataSum += decoData[y];
+  }
+  if(actualDataSum != dataSum){
+    return console.log("Error4: Los datos no corresponden a los originales.");
+  }
 
+  // 4) Volver a caracteres unicode
+  decoData.forEach((code, p)=>{
+    decoData[p] = String.fromCharCode(code);
+  });
 
-}// Fin funcion
+  // 5) Cambiar por valores en los indices de key
+  key.forEach((keyChar, i)=>{
+    decoData.forEach((dataChar, j)=>{
+      if(i == dataChar){
+        decoData[j] = keyChar;
+      }
+    });
+  });
+
+  // 6) Cambiar data a tipo original
+  decoData = decoData.join("");
+
+  // 7) Devolver String original
+  return decoData;
+}
