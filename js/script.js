@@ -277,10 +277,11 @@ function decodeThat(dataObject, key) {
   if(typeof dataObject == "Object" && (typeof key == "string" || typeof key == "number")){
     if(typeof (dataObject.data == "string" || dataObject.data == "number") && dataObject.verifiers.length == 6){
       // Extragección de datos del objeto
+      let actualKeyType = typeof key; // Guardar para verificar contra la original.
       let dataType = dataObject.verifiers[0], keyType = dataObject.verifiers[1], dataSum = dataObject.verifiers[2], keySum = dataObject.verifiers[3], dataLen = dataObject.verifiers[4], keyLen = dataObject.verifiers[5];
       let keyDigit = Array.from(keySum.toString());
       keyDigit = Number(keyDigit[0]);
-      let decoData = dataObject.data;
+      let decoData = Array.from(dataObject.data.toString()); //Datos a decodificar en forma de arreglo
       key = Array.from(key.toString());
     }else{
       return console.log("Error1: Los datos recibidos no son del tipo correcto o estaban incompletos.");
@@ -289,8 +290,20 @@ function decodeThat(dataObject, key) {
     return console.log("Error0: Los datos recibidos no son del tipo correcto.");
   }
 
+  // 1) Verificar si la clave ingresada es la correcta
+  let actualKeySum = 0;
+  key.forEach((char)=>{
+    actualKeySum += char.charCodeAt();
+  });
+  if(actualKeyType == keyType && actualKeySum == keySum && key.length == keyLen){
+    if(decoData.length != dataLen){
+      return console.log("Error3: El tamaño de la data no coincide con el original.");
+    }
+  }else{
+    return console.log("Error2: La clave ingresada no coincide.");
+  }
 
-
+  // 2) 
 
 
 
