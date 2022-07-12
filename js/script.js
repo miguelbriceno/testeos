@@ -274,7 +274,7 @@ function codeThat(data, key){
 // Recibe un objeto JSON creado por la funcion codeThat y un string con la clave para decodifiacrlo y devuelve la cadena original.
 function decodeThat(dataObject, key) {
   // 0) Verificacion y Extracción de datos
-  if(typeof dataObject == "object" && (typeof key == "string" || typeof key == "number")){
+  if(typeof dataObject == "object" && (typeof key == "string" || typeof key == "number") && (dataObject.hasOwnProperty("data") && dataObject.hasOwnProperty("verifiers"))){
     if(typeof (dataObject.data == "string" || dataObject.data == "number") && dataObject.verifiers.length == 6){
       // Extragección de datos del objeto
       var actualKeyType = typeof key; // Guardar para verificar contra la original.
@@ -319,7 +319,6 @@ function decodeThat(dataObject, key) {
   for(let y=0; y<(decoData.length / 2); y++){
     actualDataSum += decoData[y].charCodeAt();
   }
-  console.log("Actual: " + actualDataSum + " Original: " + dataSum);
   if(actualDataSum != dataSum){
     return console.log("Error4: Los datos no corresponden a los originales.");
   }
