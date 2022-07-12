@@ -274,14 +274,14 @@ function codeThat(data, key){
 // Recibe un objeto JSON creado por la funcion codeThat y un string con la clave para decodifiacrlo y devuelve la cadena original.
 function decodeThat(dataObject, key) {
   // 0) Verificacion y Extracción de datos
-  if(typeof dataObject == "Object" && (typeof key == "string" || typeof key == "number")){
+  if(typeof dataObject == "object" && (typeof key == "string" || typeof key == "number")){
     if(typeof (dataObject.data == "string" || dataObject.data == "number") && dataObject.verifiers.length == 6){
       // Extragección de datos del objeto
-      let actualKeyType = typeof key; // Guardar para verificar contra la original.
-      let dataType = dataObject.verifiers[0], keyType = dataObject.verifiers[1], dataSum = dataObject.verifiers[2], keySum = dataObject.verifiers[3], dataLen = dataObject.verifiers[4], keyLen = dataObject.verifiers[5];
-      let keyDigit = Array.from(keySum.toString());
+      var actualKeyType = typeof key; // Guardar para verificar contra la original.
+      var dataType = dataObject.verifiers[0], keyType = dataObject.verifiers[1], dataSum = dataObject.verifiers[2], keySum = dataObject.verifiers[3], dataLen = dataObject.verifiers[4], keyLen = dataObject.verifiers[5];
+      var keyDigit = Array.from(keySum.toString());
       keyDigit = Number(keyDigit[0]);
-      let decoData = Array.from(dataObject.data.toString()); //Datos a decodificar en forma de arreglo
+      var decoData = Array.from(dataObject.data.toString()); //Datos a decodificar en forma de arreglo
       key = Array.from(key.toString());
     }else{
       return console.log("Error1: Los datos recibidos no son del tipo correcto o estaban incompletos.");
@@ -309,21 +309,12 @@ function decodeThat(dataObject, key) {
     decoData[o] = (decoData[o].charCodeAt() - keyDigit);
   });
 
-  // 3) Verificar la suma de los primeros n caracteres de la data
-  let actualDataSum = 0;
-  for(let y=0; y<(decoData.length / 2); y++){
-    actualDataSum += decoData[y];
-  }
-  if(actualDataSum != dataSum){
-    return console.log("Error4: Los datos no corresponden a los originales.");
-  }
-
-  // 4) Volver a caracteres unicode
+  // 3) Volver a caracteres unicode
   decoData.forEach((code, p)=>{
     decoData[p] = String.fromCharCode(code);
   });
 
-  // 5) Cambiar por valores en los indices de key
+  // 4) Cambiar por valores en los indices de key
   key.forEach((keyChar, i)=>{
     decoData.forEach((dataChar, j)=>{
       if(i == dataChar){
@@ -331,6 +322,16 @@ function decodeThat(dataObject, key) {
       }
     });
   });
+
+  // 5) Verificar la suma de los primeros n caracteres de la data
+  // let actualDataSum = 0;
+  // for(let y=0; y<(decoData.length / 2); y++){
+  //   actualDataSum += decoData[y];
+  // }
+  // console.log("Actual: " + actualDataSum + " Original: " + dataSum);
+  // if(actualDataSum != dataSum){
+  //   return console.log("Error4: Los datos no corresponden a los originales.");
+  // }
 
   // 6) Cambiar data a tipo original
   decoData = decoData.join("");
