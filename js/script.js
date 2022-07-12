@@ -243,7 +243,7 @@ function codeThat(data, key){
   // 3) Nivel 1 - Cambio por indices
   key.forEach((keyChar, i)=>{
     data.forEach((dataChar, j)=>{
-      if(keyChar == dataChar){
+      if(keyChar == dataChar && Number(dataChar) == NaN){
         data[j] = i.toString();
       }
     });
@@ -314,28 +314,19 @@ function decodeThat(dataObject, key) {
     decoData[p] = String.fromCharCode(code);
   });
 
-  // 4) Cambiar por valores en los indices de key
-  key.forEach((keyChar, i)=>{
-    decoData.forEach((dataChar, j)=>{
-      if(i == dataChar){
-        decoData[j] = keyChar;
-      }
-    });
-  });
+  // 4) Verificar la suma de los primeros n caracteres de la data
+  let actualDataSum = 0;
+  for(let y=0; y<(decoData.length / 2); y++){
+    actualDataSum += decoData[y].charCodeAt();
+  }
+  console.log("Actual: " + actualDataSum + " Original: " + dataSum);
+  if(actualDataSum != dataSum){
+    return console.log("Error4: Los datos no corresponden a los originales.");
+  }
 
-  // 5) Verificar la suma de los primeros n caracteres de la data
-  // let actualDataSum = 0;
-  // for(let y=0; y<(decoData.length / 2); y++){
-  //   actualDataSum += decoData[y];
-  // }
-  // console.log("Actual: " + actualDataSum + " Original: " + dataSum);
-  // if(actualDataSum != dataSum){
-  //   return console.log("Error4: Los datos no corresponden a los originales.");
-  // }
-
-  // 6) Cambiar data a tipo original
+  // 5) Cambiar data a tipo original
   decoData = decoData.join("");
 
-  // 7) Devolver String original
+  // 6) Devolver String original
   return decoData;
 }
