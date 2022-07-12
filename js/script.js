@@ -300,7 +300,7 @@ function decodeThat(dataObject, key) {
       return console.log("Error3: El tamaño de la data no coincide con el original.");
     }
   }else{
-    return console.log("Error2: La clave ingresada no coincide.");
+    return console.log("Error2: La clave ingresada no coincide o no es del mismo tipo de dato.");
   }
 
   // 2) Pasar datos a codigos unicode, modificarlos y ordenarlos
@@ -325,6 +325,9 @@ function decodeThat(dataObject, key) {
 
   // 5) Cambiar data a tipo original
   decoData = decoData.join("");
+  if(dataType == "number"){
+    decoData = Number(decoData);
+  }
 
   // 6) Devolver String original
   return decoData;
