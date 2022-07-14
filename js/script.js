@@ -332,3 +332,5 @@ function decodeThat(dataObject, key) {
   // 6) Devolver String original
   return decoData;
 }
+
+// End of script.
